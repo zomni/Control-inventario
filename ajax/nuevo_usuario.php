@@ -58,7 +58,7 @@ if (empty($_POST['firstname'])) {
     $lastname = mysqli_real_escape_string($con, strip_tags($_POST["lastname"], ENT_QUOTES));
     $user_name = mysqli_real_escape_string($con, strip_tags($_POST["user_name"], ENT_QUOTES));
     $user_email = mysqli_real_escape_string($con, strip_tags($_POST["user_email"], ENT_QUOTES));
-    $user_password = $_POST['user_password_new'];
+    $user_password = password_hash($_POST['user_password_new'], PASSWORD_DEFAULT);
     $date_added = date("Y-m-d H:i:s");
 
     // check if user or email address already exists
