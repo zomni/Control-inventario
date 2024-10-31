@@ -2,7 +2,7 @@
 session_start();
 
 // Tiempo de inactividad máximo en segundos (15 minutos = 900 segundos)
-define('INACTIVITY_LIMIT', 5);
+define('INACTIVITY_LIMIT', 900);
 
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['user_login_status']) || $_SESSION['user_login_status'] != 1) {

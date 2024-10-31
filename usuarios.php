@@ -37,7 +37,7 @@
 			<form class="form-horizontal" role="form" id="datos_cotizacion">
 				
 						<div class="form-group row">
-							<label for="q" class="col-md-2 control-label">Nonbres:</label>
+							<label for="q" class="col-md-2 control-label">Nombres:</label>
 							<div class="col-md-5">
 								<input type="text" class="form-control" id="q" placeholder="Nombre" onkeyup='load(1);'>
 							</div>
