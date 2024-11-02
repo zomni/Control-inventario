@@ -36,6 +36,17 @@ function agregar_stock($id_producto, $quantity, $reference, $user_id) {
 }
 function eliminar_stock($id_producto, $quantity, $reference, $user_id) {
     global $con;
+    
+    // Verificar el stock actual
+    $query = mysqli_query($con, "SELECT stock FROM products WHERE id_producto = '$id_producto'");
+    $row = mysqli_fetch_array($query);
+    $stock_actual = $row['stock'];
+
+    if ($quantity > $stock_actual) {
+        // Si intenta eliminar más de lo disponible, retornar un error específico
+        return -1;
+    }
+
     $update = mysqli_query($con, "UPDATE products SET stock = stock - '$quantity' WHERE id_producto = '$id_producto'");
     if ($update) {
         // Registrar en el historial
@@ -47,4 +58,5 @@ function eliminar_stock($id_producto, $quantity, $reference, $user_id) {
         return 0;
     }
 }
+
 ?>

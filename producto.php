@@ -27,17 +27,23 @@
     // Agregar stock
     if (isset($_POST['reference']) && isset($_POST['quantity'])) {
         $quantity = intval($_POST['quantity']);
-        $reference = $codigo_producto; // Usar el código del producto como referencia
-        $id_producto = intval($_GET['id']);
-        $user_id = $_SESSION['user_id'];
-        $firstname = $_SESSION['firstname'];
-
-        // Registrar la acción de agregar stock
-        $update = agregar_stock($id_producto, $quantity, $reference, $user_id);
-        if ($update == 1) {
-            $message = 1;
+        
+        // Limitar la cantidad a 5 cifras
+        if ($quantity > 99999) {
+            $error_message = "Error: La cantidad no puede exceder de 7 cifras.";
         } else {
-            $error = 1;
+            $reference = $codigo_producto; // Usar el código del producto como referencia
+            $id_producto = intval($_GET['id']);
+            $user_id = $_SESSION['user_id'];
+            $firstname = $_SESSION['firstname'];
+
+            // Registrar la acción de agregar stock
+            $update = agregar_stock($id_producto, $quantity, $reference, $user_id);
+            if ($update == 1) {
+                $message = 1;
+            } else {
+                $error = 1;
+            }
         }
     }
     
@@ -53,6 +59,9 @@
         $update = eliminar_stock($id_producto, $quantity, $reference, $user_id);
         if ($update == 1) {
             $message = 1;
+        } elseif ($update == -1) {
+            // Error si intenta eliminar más de lo disponible
+            $error_message = "No se puede eliminar más stock del disponible.";
         } else {
             $error = 1;
         }
@@ -125,10 +134,10 @@
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             <strong>Aviso!</strong> Datos procesados exitosamente.
                                         </div>
-                                    <?php } if (isset($error)) { ?>
+                                    <?php } if (isset($error_message)) { ?>
                                         <div class="alert alert-danger alert-dismissible" role="alert">
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <strong>Error!</strong> No se pudo procesar los datos.
+                                            <strong>Error!</strong> <?php echo $error_message; ?>
                                         </div>
                                     <?php } ?>  
                                     <table class='table table-bordered'>
@@ -185,10 +194,9 @@ $("#editar_producto").submit(function(event) {
             $("#resultados_ajax2").html(datos);
             $('#actualizar_datos').attr("disabled", false);
             
-            // Recarga la página para ver el producto actualizado sin redirigir a stock.php
             setTimeout(function() {
                 location.reload();
-            }, 4000); // Puedes ajustar el tiempo de espera si es necesario
+            }, 4000); // Ajusta el tiempo de espera si es necesario
         }
     });
     event.preventDefault();
